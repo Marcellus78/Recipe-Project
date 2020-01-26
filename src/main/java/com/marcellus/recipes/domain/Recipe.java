@@ -1,6 +1,7 @@
 package com.marcellus.recipes.domain;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class Recipe {
@@ -19,6 +20,9 @@ public class Recipe {
 
     @Lob
     private Byte[] image;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "recipe")
+    private Set<Ingredient> ingredients;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Notes notes;
