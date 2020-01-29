@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Recipes List</title>
+</head>
+<body>
+    <h1 th:text="'Recipes Lists'">Main Page</h1>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Categories</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="recipe:${recipes}">
+                <td th:text="${recipe.description}">Description</td>
+                <td th:each="categorie:${recipe.categories}">
+                    <p th:text="${categorie.categoryName}"></p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
