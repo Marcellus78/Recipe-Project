@@ -10,7 +10,7 @@ import java.util.Set;
 @Service
 public class RecipeServiceImpl implements RecipeService {
 
-    private RecipeRepository recipeRepository;
+    private final RecipeRepository recipeRepository;
 
     public RecipeServiceImpl(RecipeRepository recipeRepository){
         this.recipeRepository = recipeRepository;
@@ -27,21 +27,21 @@ public class RecipeServiceImpl implements RecipeService {
 
     @Override
     public Recipe findById(Long id) {
-        return null;
+        return recipeRepository.findById(id).get();
     }
 
     @Override
     public void save(Recipe recipe) {
-
+        recipeRepository.save(recipe);
     }
 
     @Override
     public void delete(Recipe recipe) {
-
+        recipeRepository.delete(recipe);
     }
 
     @Override
     public void deleteById(Long id) {
-
+        recipeRepository.deleteById(id);
     }
 }
