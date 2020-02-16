@@ -1,5 +1,7 @@
 package com.marcellus.recipes.service;
 
+import com.marcellus.recipes.converters.RecipeCommandToRecipe;
+import com.marcellus.recipes.converters.RecipeToRecipeCommand;
 import com.marcellus.recipes.domain.Recipe;
 import com.marcellus.recipes.repositories.RecipeRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,12 +23,16 @@ class RecipeServiceImplTest {
 
     @Mock
     RecipeRepository recipeRepository;
+    @Mock
+    RecipeCommandToRecipe recipeCommandToRecipe;
+    @Mock
+    RecipeToRecipeCommand recipeToRecipeCommand;
 
     @BeforeEach
     void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        recipeService = new RecipeServiceImpl(recipeRepository);
+        recipeService = new RecipeServiceImpl(recipeRepository, recipeCommandToRecipe, recipeToRecipeCommand);
     }
 
     @Test

@@ -1,10 +1,14 @@
 package com.marcellus.recipes.service;
 
+import com.marcellus.recipes.commands.RecipeCommand;
+import com.marcellus.recipes.converters.RecipeCommandToRecipe;
+import com.marcellus.recipes.converters.RecipeToRecipeCommand;
 import com.marcellus.recipes.domain.Recipe;
 import com.marcellus.recipes.repositories.RecipeRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -14,9 +18,15 @@ import java.util.Set;
 public class RecipeServiceImpl implements RecipeService {
 
     private final RecipeRepository recipeRepository;
+    private final RecipeCommandToRecipe recipeCommandToRecipe;
+    private final RecipeToRecipeCommand recipeToRecipeCommand;
 
-    public RecipeServiceImpl(RecipeRepository recipeRepository){
+    public RecipeServiceImpl(RecipeRepository recipeRepository,
+                             RecipeCommandToRecipe recipeCommandToRecipe,
+                             RecipeToRecipeCommand recipeToRecipeCommand){
         this.recipeRepository = recipeRepository;
+        this.recipeCommandToRecipe = recipeCommandToRecipe;
+        this.recipeToRecipeCommand = recipeToRecipeCommand;
     }
 
     @Override
@@ -42,17 +52,13 @@ public class RecipeServiceImpl implements RecipeService {
     }
 
     @Override
-    public void save(Recipe recipe) {
-        recipeRepository.save(recipe);
-    }
+    @Transactional
+    public RecipeCommand saveRecipeCommand(RecipeCommand command) {
+        Recipe detachedRecipe = recipeCommandToRecipe.convert(command);
 
-    @Override
-    public void delete(Recipe recipe) {
-        recipeRepository.delete(recipe);
-    }
+        Recipe savedRecipe = recipeRepository.save(detachedRecipe);
+        log.debug("Saved Recipe " + savedRecipe.getId());
 
-    @Override
-    public void deleteById(Long id) {
-        recipeRepository.deleteById(id);
+        return recipeToRecipeCommand.convert(savedRecipe);
     }
 }
