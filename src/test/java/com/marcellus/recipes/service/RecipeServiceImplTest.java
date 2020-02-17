@@ -1,5 +1,6 @@
 package com.marcellus.recipes.service;
 
+import com.marcellus.recipes.commands.RecipeCommand;
 import com.marcellus.recipes.converters.RecipeCommandToRecipe;
 import com.marcellus.recipes.converters.RecipeToRecipeCommand;
 import com.marcellus.recipes.domain.Recipe;
@@ -52,6 +53,27 @@ class RecipeServiceImplTest {
         verify(recipeRepository,times(1)).findById(anyLong());
         verify(recipeRepository,never()).findAll();
 
+
+    }
+    @Test
+    void findCommandByIdShouldReturnRecipeCommnad(){
+        //given
+        Recipe recipe = new Recipe();
+        recipe.setId(1L);
+        Optional<Recipe> optionalRecipe = Optional.of(recipe);
+
+        when(recipeRepository.findById(anyLong())).thenReturn(optionalRecipe);
+
+        RecipeCommand recipeCommand = new RecipeCommand();
+        recipeCommand.setId(recipe.getId());
+
+        when(recipeToRecipeCommand.convert(any())).thenReturn(recipeCommand);
+
+        RecipeCommand recipeById = recipeService.findCommandById(1L);
+
+        assertNotNull(recipeById);
+        verify(recipeRepository, times(1)).findById(1L);
+        verify(recipeRepository, never()).findAll();
 
     }
     @Test
