@@ -1,6 +1,8 @@
 package com.marcellus.recipes.controllers;
 
 import com.marcellus.recipes.commands.IngredientCommand;
+import com.marcellus.recipes.commands.RecipeCommand;
+import com.marcellus.recipes.commands.UnitOfMeasureCommand;
 import com.marcellus.recipes.service.IngredientService;
 import com.marcellus.recipes.service.RecipeService;
 import com.marcellus.recipes.service.UnitOfMeasureService;
@@ -63,5 +65,30 @@ public class IngredientController {
         log.debug("saved ingredient id:" + savedCommand.getId());
 
         return "redirect:/recipe/" + savedCommand.getRecipeId() + "/ingredient/" + savedCommand.getId() + "/show";
+    }
+    @GetMapping
+    @RequestMapping("recipe/{recipeId}/ingredient/new")
+    public String newIngredient(@PathVariable String recipeId, Model model){
+        RecipeCommand recipeCommand = recipeService.findCommandById(Long.valueOf(recipeId));
+
+        IngredientCommand ingredientCommand = new IngredientCommand();
+        ingredientCommand.setRecipeId(recipeCommand.getId());
+
+        model.addAttribute("ingredient", ingredientCommand);
+
+        ingredientCommand.setUom(new UnitOfMeasureCommand());
+
+        model.addAttribute("uomList", unitOfMeasureService.findAllUoms());
+
+        return "recipe/ingredient/ingredientForm";
+    }
+    @GetMapping
+    @RequestMapping("recipe/{recipeId}/ingredient/{id}/delete")
+    public String deleteIngredient(@PathVariable String recipeId,
+                                   @PathVariable String id){
+
+        log.debug("Deleting ingredient id: " + id);
+        ingredientService.deleteById(Long.valueOf(recipeId), Long.valueOf(id));
+        return "redirect:/recipe/" + recipeId + "/ingredients";
     }
 }
