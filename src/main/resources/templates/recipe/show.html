@@ -38,10 +38,15 @@
                             <div class="col-md-3">
                                 <h5>Categories:</h5>
                             </div>
-                            <div class="col-md-9">
+                            <div class="col-md-3">
                                 <ul th:each="category: ${recipe.categories}">
                                     <li th:text="${category.description}">cat one</li>
                                 </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <img src="../../static/images/guacamole400x400WithX.jpg"
+                                     th:src="@{'/recipe/' + ${recipe.id} + '/recipeimage'}"
+                                     width="200" height="200">
                             </div>
                         </div>
                         <div class="row">
