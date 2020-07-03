@@ -3,6 +3,7 @@ package com.marcellus.recipes.controllers;
 import com.marcellus.recipes.commands.RecipeCommand;
 import com.marcellus.recipes.domain.Recipe;
 import com.marcellus.recipes.service.RecipeService;
+import exceptions.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -48,6 +49,13 @@ public class RecipeControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("recipe/show"))
                 .andExpect(model().attributeExists("recipe"));
+    }
+    @Test
+    void recipeNotFound() throws Exception {
+        when(recipeService.findById(anyLong())).thenThrow(NotFoundException.class);
+
+        mockMvc.perform(get("/recipe/1/show"))
+                .andExpect(status().isNotFound());
     }
     @Test
     void getNewRecipeForm() throws Exception {

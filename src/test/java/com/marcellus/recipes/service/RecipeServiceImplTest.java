@@ -5,6 +5,7 @@ import com.marcellus.recipes.converters.RecipeCommandToRecipe;
 import com.marcellus.recipes.converters.RecipeToRecipeCommand;
 import com.marcellus.recipes.domain.Recipe;
 import com.marcellus.recipes.repositories.RecipeRepository;
+import exceptions.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -14,8 +15,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 class RecipeServiceImplTest {
@@ -55,6 +55,28 @@ class RecipeServiceImplTest {
 
 
     }
+//    @Test
+//    void getRecipeByIdTestNotFound() {
+//        Optional<Recipe> recipeOptional = Optional.empty();
+//
+//        when(recipeRepository.findById(anyLong())).thenReturn(recipeOptional);
+//
+//        NotFoundException notFoundException = assertThrows(
+//                NotFoundException.class, () -> recipeService.findById(1L),
+//                "Recipe Not Found"
+//        );
+//        assertTrue(notFoundException.getMessage().contains("Recipe Not Found"));
+//    }
+    @Test
+    void exceptionTesting() {
+    NotFoundException thrown =
+            assertThrows(NotFoundException.class,
+                    () -> recipeService.findById(1L),
+                    "Expected doThing() to throw, but it didn't");
+
+    assertTrue(thrown.getMessage().contains("Recipe not found"));
+}
+
     @Test
     void findCommandByIdShouldReturnRecipeCommnad(){
         //given
