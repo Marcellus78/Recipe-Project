@@ -2,6 +2,7 @@ package com.marcellus.recipes.converters;
 
 import com.marcellus.recipes.commands.IngredientCommand;
 import com.marcellus.recipes.domain.Ingredient;
+import com.marcellus.recipes.domain.Recipe;
 import lombok.Synchronized;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
@@ -26,6 +27,13 @@ public class IngredientCommandToIngredient implements Converter<IngredientComman
         }
         final Ingredient ingredient = new Ingredient();
         ingredient.setId(source.getId());
+
+        if(source.getRecipeId() != null) {
+            Recipe recipe = new Recipe();
+            recipe.setId(source.getRecipeId());
+            recipe.addIngredient(ingredient);
+        }
+
         ingredient.setDescription(source.getDescription());
         ingredient.setAmount(source.getAmount());
         ingredient.setUom(uomConverter.convert(source.getUom()));
