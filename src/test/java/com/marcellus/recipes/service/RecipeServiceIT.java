@@ -15,7 +15,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@Disabled("application context fix")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 public class RecipeServiceIT {
