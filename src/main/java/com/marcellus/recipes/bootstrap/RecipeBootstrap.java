@@ -4,7 +4,11 @@ import com.marcellus.recipes.domain.*;
 import com.marcellus.recipes.repositories.CategoryRepository;
 import com.marcellus.recipes.repositories.RecipeRepository;
 import com.marcellus.recipes.repositories.UnitOfMeasureRepository;
+import com.marcellus.recipes.repositories.reactive.CategoryReactiveRepository;
+import com.marcellus.recipes.repositories.reactive.RecipeReactiveRepository;
+import com.marcellus.recipes.repositories.reactive.UnitOfMeasureReactiveRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -34,10 +38,12 @@ public class RecipeBootstrap implements ApplicationListener<ContextRefreshedEven
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent event) {
+
         loadCategories();
         loadUom();
         recipeRepository.saveAll(getRecipes());
         log.debug("Loading Bootstrap Data");
+
     }
 
     private void loadCategories(){
