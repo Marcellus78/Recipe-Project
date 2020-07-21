@@ -5,7 +5,6 @@ import com.marcellus.recipes.converters.IngredientCommandToIngredient;
 import com.marcellus.recipes.converters.IngredientToIngredientCommand;
 import com.marcellus.recipes.domain.Ingredient;
 import com.marcellus.recipes.domain.Recipe;
-import com.marcellus.recipes.repositories.RecipeRepository;
 import com.marcellus.recipes.repositories.reactive.RecipeReactiveRepository;
 import com.marcellus.recipes.repositories.reactive.UnitOfMeasureReactiveRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +20,7 @@ public class IngredientServiceImpl implements IngredientService {
     private final IngredientToIngredientCommand ingredientToIngredientCommand;
     private final IngredientCommandToIngredient ingredientCommandToIngredient;
     private final RecipeReactiveRepository recipeReactiveRepository;
-    private final UnitOfMeasureReactiveRepository unitOfMeasureRepository;
+    private final UnitOfMeasureReactiveRepository unitOfMeasureReactiveRepository;
 
     public IngredientServiceImpl(IngredientToIngredientCommand ingredientToIngredientCommand,
                                  IngredientCommandToIngredient ingredientCommandToIngredient,
@@ -30,7 +29,7 @@ public class IngredientServiceImpl implements IngredientService {
         this.ingredientToIngredientCommand = ingredientToIngredientCommand;
         this.ingredientCommandToIngredient = ingredientCommandToIngredient;
         this.recipeReactiveRepository = recipeReactiveRepository;
-        this.unitOfMeasureRepository = unitOfMeasureRepository;
+        this.unitOfMeasureReactiveRepository = unitOfMeasureRepository;
     }
 
     @Override
@@ -89,7 +88,7 @@ public class IngredientServiceImpl implements IngredientService {
                 Ingredient ingredientFound = ingredientOptional.get();
                 ingredientFound.setDescription(command.getDescription());
                 ingredientFound.setAmount(command.getAmount());
-                ingredientFound.setUom(unitOfMeasureRepository
+                ingredientFound.setUom(unitOfMeasureReactiveRepository
                         .findById(command.getUom().getId()).block());
 //                        .orElseThrow(()-> new RuntimeException("Uom not found")));
                 if (ingredientFound.getUom() == null){
@@ -97,7 +96,9 @@ public class IngredientServiceImpl implements IngredientService {
                 }
             } else {
                 //add new Ingredient
+
                 Ingredient ingredient = ingredientCommandToIngredient.convert(command);
+                ingredient.setUom(unitOfMeasureReactiveRepository.findById(command.getUom().getId()).block());
 //                ingredient.setRecipe(recipe);
                 recipe.addIngredient(ingredient);
             }
@@ -119,6 +120,7 @@ public class IngredientServiceImpl implements IngredientService {
             //enhance with id value
             IngredientCommand ingredientCommandSaved = ingredientToIngredientCommand.convert(savedIngredientOptional.get());
             ingredientCommandSaved.setRecipeId(recipe.getId());
+            ingredientCommandSaved.setId(savedIngredientOptional.get().getId());
 
             return Mono.just(ingredientCommandSaved);
         }

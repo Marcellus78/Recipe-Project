@@ -3,10 +3,12 @@ package com.marcellus.recipes.converters;
 import com.marcellus.recipes.commands.UnitOfMeasureCommand;
 import com.marcellus.recipes.domain.UnitOfMeasure;
 import lombok.Synchronized;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class UnitOfMeasureToUnitOfMeasureCommand implements Converter<UnitOfMeasure, UnitOfMeasureCommand> {
 

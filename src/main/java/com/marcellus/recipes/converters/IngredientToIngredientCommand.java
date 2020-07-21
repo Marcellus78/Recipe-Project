@@ -3,11 +3,12 @@ package com.marcellus.recipes.converters;
 import com.marcellus.recipes.commands.IngredientCommand;
 import com.marcellus.recipes.domain.Ingredient;
 import lombok.Synchronized;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
-
+@Slf4j
 @Component
 public class IngredientToIngredientCommand implements Converter<Ingredient, IngredientCommand> {
 

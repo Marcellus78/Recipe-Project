@@ -1,12 +1,14 @@
 package com.marcellus.recipes.service;
 
 import com.marcellus.recipes.commands.IngredientCommand;
+import com.marcellus.recipes.commands.UnitOfMeasureCommand;
 import com.marcellus.recipes.converters.IngredientCommandToIngredient;
 import com.marcellus.recipes.converters.IngredientToIngredientCommand;
 import com.marcellus.recipes.converters.UnitOfMeasureCommandToUnitOfMeasure;
 import com.marcellus.recipes.converters.UnitOfMeasureToUnitOfMeasureCommand;
 import com.marcellus.recipes.domain.Ingredient;
 import com.marcellus.recipes.domain.Recipe;
+import com.marcellus.recipes.domain.UnitOfMeasure;
 import com.marcellus.recipes.repositories.RecipeRepository;
 import com.marcellus.recipes.repositories.UnitOfMeasureRepository;
 import com.marcellus.recipes.repositories.reactive.RecipeReactiveRepository;
@@ -88,6 +90,8 @@ class IngredientServiceImplTest {
         IngredientCommand command = new IngredientCommand();
         command.setId("3");
         command.setRecipeId("2");
+        command.setUom(new UnitOfMeasureCommand());
+        command.getUom().setId("1234");
 
         Optional<Recipe> recipeOptional = Optional.of(new Recipe());
 
@@ -97,6 +101,7 @@ class IngredientServiceImplTest {
 
         when(recipeReactiveRepository.findById(anyString())).thenReturn(Mono.just(new Recipe()));
         when(recipeReactiveRepository.save(any())).thenReturn(Mono.just(savedRecipe));
+        when(unitOfMeasureRepository.findById(anyString())).thenReturn(Mono.just(new UnitOfMeasure()));
 
         //when
         IngredientCommand savedCommand = ingredientService.saveIngredientCommand(command).block();

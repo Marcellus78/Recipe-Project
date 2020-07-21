@@ -4,10 +4,13 @@ import com.marcellus.recipes.commands.IngredientCommand;
 import com.marcellus.recipes.domain.Ingredient;
 import com.marcellus.recipes.domain.Recipe;
 import lombok.Synchronized;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+@Slf4j
 @Component
 public class IngredientCommandToIngredient implements Converter<IngredientCommand, Ingredient> {
 
@@ -26,7 +29,12 @@ public class IngredientCommandToIngredient implements Converter<IngredientComman
             return null;
         }
         final Ingredient ingredient = new Ingredient();
-        ingredient.setId(source.getId());
+        if(source.getId() != "") {
+                ingredient.setId(source.getId());
+        }  else {
+            ingredient.setId(UUID.randomUUID().toString());
+        }
+
 
         if(source.getRecipeId() != null) {
             Recipe recipe = new Recipe();
@@ -36,8 +44,8 @@ public class IngredientCommandToIngredient implements Converter<IngredientComman
 
         ingredient.setDescription(source.getDescription());
         ingredient.setAmount(source.getAmount());
-        ingredient.setUom(uomConverter.convert(source.getUom()));
 
+        ingredient.setUom(uomConverter.convert(source.getUom()));
         return ingredient;
     }
 }
