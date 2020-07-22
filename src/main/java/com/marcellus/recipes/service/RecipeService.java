@@ -2,14 +2,15 @@ package com.marcellus.recipes.service;
 
 import com.marcellus.recipes.commands.RecipeCommand;
 import com.marcellus.recipes.domain.Recipe;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
-import java.util.Set;
 
 public interface RecipeService  {
 
-    Set<Recipe> findAll();
-    Recipe findById(String id);
-    RecipeCommand findCommandById(String id);
-    RecipeCommand saveRecipeCommand(RecipeCommand recipeCommand);
-    void deleteById(String idToDelete);
+    Flux<Recipe> findAll();
+    Mono<Recipe> findById(String id);
+    Mono<RecipeCommand> findCommandById(String id);
+    Mono<RecipeCommand> saveRecipeCommand(RecipeCommand recipeCommand);
+    Mono<Void> deleteById(String idToDelete);
 }
